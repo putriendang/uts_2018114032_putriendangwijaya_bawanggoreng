@@ -13,14 +13,14 @@ class CobaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function show($id)
     {
-        $produks = produks::orderBy('id', 'desc')->paginate(3);
+        $produk = produks::where('id', $id) -> first();
 
         return response()->json([
             'success' => true,
-            'message' => 'Daftar Data pesanan',
-            'data' => $produks
+            'message' => 'Detail Data Pesanan',
+            'data' => $produk
         ], 200);
     }
 
@@ -30,61 +30,29 @@ class CobaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nama' => 'required|unique:produks|max:255',
-            'gambar'=> 'required',
-            'no_tlp' => 'required|numeric',
-            'alamat' => 'required',
-            'harga' => 'required',
-        ]);
-
-        $produks = produks::create([
-            'nama' => $request->nama,
-            'gambar' => $request->gambar,
-            'no_tlp' => $request->no_tlp,
-            'alamat' => $request->alamat,
-            'harga' => $request->harga
-        ]);
-        if($produks)
-        {
-            return response()->json([
-                'success' => true,
-                'message' => 'pesanan Berhasil Ditambahkan',
-                'data' => $produks
-            ], 200);
-        }else{
-            return response()->json([
-                'success' => false,
-                'message' => 'pesanan Gagal Ditambahkan',
-                'data' => $produks
-            ], 409);
-        }
-    }  
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //
-    }
+        $request->validate([
+    
+                'nama' => 'required|unique:produks|max:255',
+                'no_tlp' => 'required|numeric',
+                'alamat' => 'required',
+                'harga' => 'required',
+        ]);
+
+        $produk = produks::find($id)->update([
+            'nama' => $request->nama,
+            'no_tlp' => $request->no_tlp,
+            'alamat' => $request->alamat,
+            'harga' => $request->harga,
+        ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Post updated',
+                'data' => $produk
+            ], 200);
+        }
 
     /**
      * Remove the specified resource from storage.
@@ -94,6 +62,12 @@ class CobaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $cek =  produks::find($id)->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Post Deleted',
+            'data' => $cek
+        ], 200);
     }
-}
+} 

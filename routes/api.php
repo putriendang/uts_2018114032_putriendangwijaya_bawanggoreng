@@ -18,5 +18,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('', [CobaController::class, 'index']);
 Route::resources([
-    'produks' => CobaController::class
-]);
+    'produks' => CobaController::class,]);
